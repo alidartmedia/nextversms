@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Send SMS App</string>
+    <string name="desc_registration">Enter your mobile number we will send you the <b>OTP</b> to verify</string>
 </resources>

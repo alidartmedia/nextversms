@@ -4,15 +4,17 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Handler
+import android.os.Looper
 
-class DialogLoading(private val mActivity: Activity) {
+class DialogSuccess(private val mActivity: Activity) {
     private var dialog: AlertDialog? = null
 
-    fun showLoading() {
+    fun showDialog() {
         if (dialog?.isShowing == true) return
 
         val inflater = mActivity.layoutInflater
-        val dialogView = inflater.inflate(R.layout.dialog_loading, null)
+        val dialogView = inflater.inflate(R.layout.dialog_success, null)
 
         val builder = AlertDialog.Builder(mActivity)
         builder.setView(dialogView)
@@ -21,9 +23,11 @@ class DialogLoading(private val mActivity: Activity) {
         dialog?.setCanceledOnTouchOutside(false)
         dialog?.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.show()
-    }
 
-    fun hideLoading() {
-        dialog?.dismiss()
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (dialog?.isShowing == true) {
+                dialog?.dismiss()
+            }
+        }, 3500)
     }
 }

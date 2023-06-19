@@ -20,9 +20,16 @@
         android:theme="@style/Theme.SendSMSApp"
         tools:targetApi="31">
         <activity
+            android:name=".VerificationActivity"
+            android:theme="@style/AppThemeNoAppBar"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/AppThemeNoAppBar"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

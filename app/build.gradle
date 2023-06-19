@@ -47,7 +47,10 @@ dependencies {
     //easy permission
     implementation 'pub.devrel:easypermissions:3.0.0'
 
+    //lottie
+    implementation "com.airbnb.android:lottie:4.1.0"
+
     //sms
-//    implementation 'com.github.alidartmedia:nextversms:1.0.1'
+//    implementation 'com.github.alidartmedia:nextversms:1.0.2'
     implementation project(':nextversms')
 }

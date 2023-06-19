@@ -2,6 +2,8 @@ package com.dartmedia.nextversms
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import android.telephony.SmsManager
 import android.widget.Toast
 import com.dartmedia.nextversms.remote.ApiConfig
@@ -18,8 +20,6 @@ import retrofit2.Response
 import java.util.*
 
 class NextVerSMS private constructor(builder: Builder){
-    private val timer = Timer()
-
     private var apiKey: String
     private var apiSecret: String
     private var mContext: Context
@@ -82,12 +82,10 @@ class NextVerSMS private constructor(builder: Builder){
                     when (response.body()?.result) {
                         "success" -> {
                             callback.onSuccess()
-                            timer.cancel()
                             sendSMS(to, msg)
                         }
                         "failed" -> {
                             callback.onFailed("Send SMS failed")
-                            timer.cancel()
                         }
                         else -> {
                             scheduleApiCallWhenPending(msisdn, to, msg, callback)
@@ -103,10 +101,8 @@ class NextVerSMS private constructor(builder: Builder){
     }
 
     private fun scheduleApiCallWhenPending(msisdn: String, to: String, msg: String, callback: VerifyListener) {
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                getStatusRequest(msisdn, to, msg, callback)
-            }
+        Handler(Looper.getMainLooper()).postDelayed({
+            getStatusRequest(msisdn, to, msg, callback)
         }, 5000)
     }
 

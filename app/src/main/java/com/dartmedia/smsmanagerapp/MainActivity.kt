@@ -1,6 +1,7 @@
 package com.dartmedia.smsmanagerapp
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
@@ -18,14 +19,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val dialogLoading: DialogLoading by lazy { DialogLoading(this@MainActivity) }
-    private val nextVerSMS: NextVerSMS by lazy {
-        NextVerSMS.Builder(this)
-            .url("https://a46a-182-253-154-61.ngrok-free.app/")
-            .apiKey("")
-            .apiSecret("")
-            .build()
-    }
     private val permissions = arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.READ_PHONE_STATE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,35 +64,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun actionSendMsg() {
-
         with(binding) {
             btnSend.setOnClickListener {
+                val codeArea = etAreaCode.text.toString()
                 val phoneNumber = etPhoneNumber.text.toString()
 
-                if (phoneNumber.isEmpty()) {
+                if (codeArea.isEmpty()) {
+                    etAreaCode.error = "Field is required"
+                } else if (phoneNumber.isEmpty()) {
                     etPhoneNumber.error = "Field is required"
                 } else {
-//                    deleteOutboxSMS("+6281905598514")
-//                    sendSMS(phoneNumber, msg)
-
-//                    val cursor = contentResolver.query(Uri.parse("content://sms"), null, null, null, null)
-//                    cursor?.moveToFirst()
-//
-//                    Log.d(TAG, cursor?.getString(cursor.getColumnIndex("body")) ?: "null")
-
-                    dialogLoading.showLoading()
-
-                     nextVerSMS.verify(phoneNumber, object : VerifyListener {
-                        override fun onSuccess() {
-                            Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
-                            dialogLoading.hideLoading()
-                        }
-
-                        override fun onFailed(errorMessage: String) {
-                            Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_SHORT).show()
-                            dialogLoading.hideLoading()
-                        }
-                    })
+                    val i = Intent(this@MainActivity, VerificationActivity::class.java)
+                    i.putExtra(VerificationActivity.PHONE_NUMBER, "$codeArea$phoneNumber")
+                    startActivity(i)
                 }
             }
         }
