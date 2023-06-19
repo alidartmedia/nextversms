@@ -1,5 +1,6 @@
 package com.dartmedia.nextversms.remote
 
+import android.content.Context
 import com.dartmedia.nextversms.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -9,7 +10,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiConfig {
 
     companion object {
-        fun getApiService(): ApiService {
+        fun getApiService(context: Context): ApiService {
+            val apiManager = ApiManager(context)
+
             val loggingInterceptor = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             } else {
@@ -21,7 +24,7 @@ class ApiConfig {
                 .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL_API)
+                .baseUrl(apiManager.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()

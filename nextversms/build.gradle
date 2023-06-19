@@ -14,7 +14,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField 'String', 'BASE_URL_API', '\"https://a46a-182-253-154-61.ngrok-free.app/\"'
+        buildConfigField 'String', 'BASE_URL_API', '\"BASE_URL\"'
     }
 
     buildTypes {
@@ -53,9 +53,9 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
 
-                groupId = 'com.github.dartmedia'
+                groupId = 'com.github.alidartmedia'
                 artifactId = 'nextversms'
-                version = '1.0.1'
+                version = '1.0.2'
             }
         }
     }

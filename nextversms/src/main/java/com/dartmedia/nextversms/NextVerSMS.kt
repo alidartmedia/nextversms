@@ -1,8 +1,11 @@
 package com.dartmedia.nextversms
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.telephony.SmsManager
 import android.widget.Toast
 import com.dartmedia.nextversms.remote.ApiConfig
+import com.dartmedia.nextversms.remote.ApiManager
 import com.dartmedia.nextversms.remote.dto.SendRequestBody
 import com.dartmedia.nextversms.remote.dto.SendRequestResponse
 import com.dartmedia.nextversms.remote.dto.StatusResponse
@@ -19,28 +22,35 @@ class NextVerSMS private constructor(builder: Builder){
 
     private var apiKey: String
     private var apiSecret: String
+    private var mContext: Context
 
     private lateinit var smsManager: SmsManager
 
-    class Builder {
+    class Builder(context: Context) {
+        private val mContext = context
+        private val apiManager = ApiManager(mContext)
+
         private var apiKey: String? = null
         private var apiSecret: String? = null
 
+        fun url(url: String) = apply { apiManager.setBaseUrl(url) }
         fun apiKey(apiKey: String) = apply { this.apiKey = apiKey }
         fun apiSecret(apiSecret: String) = apply { this.apiSecret = apiSecret }
         fun build() = NextVerSMS(this)
 
         fun getApiKey() = apiKey!!
         fun getApiSecret() = apiSecret!!
+        fun getContext() = mContext
     }
 
     init {
         apiKey = builder.getApiKey()
         apiSecret = builder.getApiSecret()
+        mContext = builder.getContext()
     }
 
     private fun sendRequest(sendRequestBody: SendRequestBody, callback: VerifyListener) {
-        ApiConfig.getApiService().sendRequest(sendRequestBody).enqueue(object : Callback<SendRequestResponse> {
+        ApiConfig.getApiService(mContext).sendRequest(sendRequestBody).enqueue(object : Callback<SendRequestResponse> {
             override fun onResponse(
                 call: Call<SendRequestResponse>,
                 response: Response<SendRequestResponse>
@@ -59,7 +69,7 @@ class NextVerSMS private constructor(builder: Builder){
     }
 
     private fun getStatusRequest(msisdn: String, to: String, msg: String, callback: VerifyListener) {
-        ApiConfig.getApiService().getStatusRequest(msisdn).enqueue(object : Callback<StatusResponse> {
+        ApiConfig.getApiService(mContext).getStatusRequest(msisdn).enqueue(object : Callback<StatusResponse> {
             override fun onResponse(
                 call: Call<StatusResponse>,
                 response: Response<StatusResponse>

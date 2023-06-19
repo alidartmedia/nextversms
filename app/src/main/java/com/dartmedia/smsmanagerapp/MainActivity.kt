@@ -1,14 +1,8 @@
 package com.dartmedia.smsmanagerapp
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Telephony
-import android.telephony.SmsManager
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,12 +17,11 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "Main Activity"
     }
 
-    private lateinit var smsManager: SmsManager
-
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val dialogLoading: DialogLoading by lazy { DialogLoading(this@MainActivity) }
     private val nextVerSMS: NextVerSMS by lazy {
-        NextVerSMS.Builder()
+        NextVerSMS.Builder(this)
+            .url("https://a46a-182-253-154-61.ngrok-free.app/")
             .apiKey("")
             .apiSecret("")
             .build()
@@ -77,7 +70,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("Range")
     private fun actionSendMsg() {
 
         with(binding) {

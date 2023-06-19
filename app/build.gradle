@@ -48,5 +48,6 @@ dependencies {
     implementation 'pub.devrel:easypermissions:3.0.0'
 
     //sms
+//    implementation 'com.github.alidartmedia:nextversms:1.0.1'
     implementation project(':nextversms')
 }
