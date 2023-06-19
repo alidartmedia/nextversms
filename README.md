@@ -20,7 +20,7 @@ dependencyResolutionManagement {
 
 ```groovy
 dependencies {
-    implementation 'com.github.alidartmedia:nextversms:1.0.0'
+    implementation 'com.github.alidartmedia:nextversms:$latestVersion'
 }
 ```
 
