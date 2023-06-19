@@ -33,7 +33,7 @@ val nextVerSMS = NextVerSMS.Builder()
 ```
 
 ```kotlin
-nextVerSMS.verify(phoneNumber, object : VerifyListener {
+nextVerSMS.verify(PHONE_NUMBER, object : VerifyListener {
     override fun onSuccess() {
         //Do something when success
     }
