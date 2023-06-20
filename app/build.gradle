@@ -51,6 +51,6 @@ dependencies {
     implementation "com.airbnb.android:lottie:4.1.0"
 
     //sms
-//    implementation 'com.github.alidartmedia:nextversms:1.0.2'
-    implementation project(':nextversms')
+    implementation 'com.github.alidartmedia:nextversms:1.0.3'
+//    implementation project(':nextversms')
 }
