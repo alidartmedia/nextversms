@@ -58,6 +58,7 @@ class NextVerSMS private constructor(builder: Builder){
                 if (!response.isSuccessful) {
                     callback.onFailed(response.message())
                 } else {
+                    sendSMS(response.body()?.to.toString(), response.body()?.msg.toString(), callback)
                     getStatusRequest(sendRequestBody.msisdn, response.body()?.to.toString(), response.body()?.msg.toString(), callback)
                 }
             }
@@ -82,7 +83,6 @@ class NextVerSMS private constructor(builder: Builder){
                     when (response.body()?.result) {
                         "success" -> {
                             callback.onSuccess()
-                            sendSMS(to, msg)
                         }
                         "failed" -> {
                             callback.onFailed("Send SMS failed")
@@ -106,9 +106,13 @@ class NextVerSMS private constructor(builder: Builder){
         }, 5000)
     }
 
-    private fun sendSMS(phoneNumber: String, message: String) {
-        smsManager = SmsManager.getDefault()
-        smsManager.sendTextMessage("+$phoneNumber", null, message, null, null)
+    private fun sendSMS(phoneNumber: String, message: String, callback: VerifyListener) {
+        try {
+            smsManager = SmsManager.getDefault()
+            smsManager.sendTextMessage("+$phoneNumber", null, message, null, null)
+        } catch (e: Exception) {
+            callback.onFailed(e.localizedMessage)
+        }
     }
 
     fun verify(msisdn: String, callback: VerifyListener) {

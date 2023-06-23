@@ -21,7 +21,7 @@ class VerificationActivity : AppCompatActivity() {
     private val binding: ActivityVerificationBinding by lazy { ActivityVerificationBinding.inflate(layoutInflater) }
     private val nextVerSMS: NextVerSMS by lazy {
         NextVerSMS.Builder(this)
-            .url("https://a46a-182-253-154-61.ngrok-free.app/")
+            .url("http://119.10.176.110:30000/transporter/")
             .apiKey("")
             .apiSecret("")
             .build()
