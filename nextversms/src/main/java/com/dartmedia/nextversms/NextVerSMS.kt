@@ -58,8 +58,7 @@ class NextVerSMS private constructor(builder: Builder){
                 if (!response.isSuccessful) {
                     callback.onFailed(response.message())
                 } else {
-                    sendSMS(response.body()?.to.toString(), response.body()?.msg.toString(), callback)
-                    getStatusRequest(sendRequestBody.msisdn, response.body()?.to.toString(), response.body()?.msg.toString(), callback)
+                    sendSMS(sendRequestBody.msisdn, response.body()?.to.toString(), response.body()?.msg.toString(), callback)
                 }
             }
 
@@ -69,7 +68,7 @@ class NextVerSMS private constructor(builder: Builder){
         })
     }
 
-    private fun getStatusRequest(msisdn: String, to: String, msg: String, callback: VerifyListener) {
+    private fun getStatusRequest(msisdn: String, callback: VerifyListener) {
         ApiConfig.getApiService(mContext).getStatusRequest(msisdn).enqueue(object : Callback<StatusResponse> {
             override fun onResponse(
                 call: Call<StatusResponse>,
@@ -88,7 +87,7 @@ class NextVerSMS private constructor(builder: Builder){
                             callback.onFailed("Send SMS failed")
                         }
                         else -> {
-                            scheduleApiCallWhenPending(msisdn, to, msg, callback)
+                            scheduleApiCallWhenPending(msisdn, callback)
                         }
                     }
                 }
@@ -100,16 +99,17 @@ class NextVerSMS private constructor(builder: Builder){
         })
     }
 
-    private fun scheduleApiCallWhenPending(msisdn: String, to: String, msg: String, callback: VerifyListener) {
+    private fun scheduleApiCallWhenPending(msisdn: String, callback: VerifyListener) {
         Handler(Looper.getMainLooper()).postDelayed({
-            getStatusRequest(msisdn, to, msg, callback)
+            getStatusRequest(msisdn, callback)
         }, 5000)
     }
 
-    private fun sendSMS(phoneNumber: String, message: String, callback: VerifyListener) {
+    private fun sendSMS(msisdn: String, phoneNumber: String, message: String, callback: VerifyListener) {
         try {
             smsManager = SmsManager.getDefault()
             smsManager.sendTextMessage("+$phoneNumber", null, message, null, null)
+            getStatusRequest(msisdn, callback)
         } catch (e: Exception) {
             callback.onFailed(e.localizedMessage)
         }
