@@ -15,6 +15,6 @@ interface ApiService {
     fun sendRequest(@Body sendRequestBody: SendRequestBody): Call<SendRequestResponse>
 
     @GET("status")
-    fun getStatusRequest(@Query("msisdn") msisdn: String): Call<StatusResponse>
+    fun getStatusRequest(@Query("msisdn") msisdn: String, @Query("to") to: String, @Query("msg") msg: String): Call<StatusResponse>
 
 }

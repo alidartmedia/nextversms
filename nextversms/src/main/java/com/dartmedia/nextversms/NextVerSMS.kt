@@ -68,8 +68,8 @@ class NextVerSMS private constructor(builder: Builder){
         })
     }
 
-    private fun getStatusRequest(msisdn: String, callback: VerifyListener) {
-        ApiConfig.getApiService(mContext).getStatusRequest(msisdn).enqueue(object : Callback<StatusResponse> {
+    private fun getStatusRequest(msisdn: String, to: String, msg: String, callback: VerifyListener) {
+        ApiConfig.getApiService(mContext).getStatusRequest(msisdn, to, msg).enqueue(object : Callback<StatusResponse> {
             override fun onResponse(
                 call: Call<StatusResponse>,
                 response: Response<StatusResponse>
@@ -87,7 +87,7 @@ class NextVerSMS private constructor(builder: Builder){
                             callback.onFailed("Send SMS failed")
                         }
                         else -> {
-                            scheduleApiCallWhenPending(msisdn, callback)
+                            scheduleApiCallWhenPending(msisdn, to, msg, callback)
                         }
                     }
                 }
@@ -99,9 +99,9 @@ class NextVerSMS private constructor(builder: Builder){
         })
     }
 
-    private fun scheduleApiCallWhenPending(msisdn: String, callback: VerifyListener) {
+    private fun scheduleApiCallWhenPending(msisdn: String, to: String, msg: String, callback: VerifyListener) {
         Handler(Looper.getMainLooper()).postDelayed({
-            getStatusRequest(msisdn, callback)
+            getStatusRequest(msisdn, to, msg, callback)
         }, 5000)
     }
 
@@ -109,7 +109,7 @@ class NextVerSMS private constructor(builder: Builder){
         try {
             smsManager = SmsManager.getDefault()
             smsManager.sendTextMessage("+$phoneNumber", null, message, null, null)
-            getStatusRequest(msisdn, callback)
+            getStatusRequest(msisdn, phoneNumber, message, callback)
         } catch (e: Exception) {
             callback.onFailed(e.localizedMessage)
         }
