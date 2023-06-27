@@ -55,7 +55,7 @@ afterEvaluate {
 
                 groupId = 'com.github.alidartmedia'
                 artifactId = 'nextversms'
-                version = '1.0.4'
+                version = '1.0.6'
             }
         }
     }
